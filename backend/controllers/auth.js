@@ -23,6 +23,9 @@ export const signup = async (req, res, next) => {
 
         const user = new User(result);
         const savedUser = await user.save();
+        const accessToken = await signAccessToken(savedUser.id);
+        const refreshToken = await signRefreshToken(savedUser.id);
+        res.send({accessToken, refreshToken});
 
     } catch (error) {
         if (error.isJoi === true) error.status = 422;
@@ -39,21 +42,26 @@ export const login = async (req, res, next) => {
         });
         if (!user) throw createError.NotFound('User not registered!');
 
-        const isMatch = await user.isValidPassword(resut.password);
+        const isMatch = await user.isValidPassword(result.password);
         if (!isMatch) throw createError.Unauthorized('Username/Password not valid!');
 
+        const accessToken = await signAccessToken(user.id);
+        const refreshToken = await signRefreshToken(user.id);
+
+        res.send({accessToken, refreshToken});
 
 
     } catch (error) {
-        console.log(error.message);
+        if(error.isJoi === true){
+            return next(createError.BadRequest('Invalid Username/Password'))
+        }
+        next(error);
     }
 }
 
 export const refreshToken = async (req, res, next) => {
     try {
-        const {
-            refreshToken
-        } = req.body;
+        const { refreshToken } = req.body;
         if (!refreshToken) throw createError.BadRequest();
         const userId = await verifyRefreshToken(refreshToken);
 
