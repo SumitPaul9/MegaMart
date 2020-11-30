@@ -10,8 +10,9 @@ import './helpers/init_mongodb.js';
 
 
 //----------------------------------import routes------------------------------------------
-import authroutes from './routes/auth.js';
-
+import authRoutes from './routes/auth.js';
+import adminAuthroutes from './routes/admin/auth.js';
+import categoryRoutes from './routes/category.js'
 //----------------------------------import JWT----------------------------------------------
 import { verifyAccessToken} from './helpers/jwt_helper.js';
 
@@ -26,8 +27,11 @@ app.get('/', verifyAccessToken, async(req, res, next)=>{           // welcome ro
     res.send("Welcome to the app!");
 })
 
-app.use('/api', authroutes);                    // auth routes
-                                             
+app.use('/api', authRoutes);                    // auth routes
+app.use('/api', adminAuthroutes);               // admin auth routes
+app.use('/api', verifyAccessToken, categoryRoutes);                // category routes
+
+
 app.use(async(req, res, next)=>{                // Not found route
     next(createError.NotFound());
 })

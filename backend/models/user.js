@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-
+import bcrypt from 'bcryptjs'
+import shortid from 'shortid';
 const userSchema = new mongoose.Schema({
         
     firstName:{
@@ -18,7 +19,6 @@ const userSchema = new mongoose.Schema({
     },
     username:{
         type: String,
-        required: true,
         trim: true,
         unique: true,
         lowercase: true,
@@ -55,11 +55,15 @@ userSchema.pre('save', async function(next){
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(this.password, salt);
         this.password = hashedPassword;
+
+        this.username = shortid.generate();
         next();
     }catch(error){
         console.log(error);
     }
 })
+
+
 
 userSchema.methods.isValidPassword = async function(password){
     try {

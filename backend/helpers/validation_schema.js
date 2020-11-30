@@ -12,7 +12,6 @@ export const signupSchema = Joi.object({
             .required(),
     
     username: Joi.string()
-            .required()
             .min(3),
     
     password: Joi.string()
@@ -24,8 +23,7 @@ export const signupSchema = Joi.object({
             .lowercase()
             .required(),
     
-    role: Joi.string()
-            .required(),
+    role: Joi.string(),
 
     contactnumber: Joi.string()
             .required()

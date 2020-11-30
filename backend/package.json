@@ -18,7 +18,9 @@
     "http-errors": "^1.8.0",
     "joi": "^17.3.0",
     "mongoose": "^5.10.15",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "shortid": "^2.2.16",
+    "slugify": "^1.4.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
